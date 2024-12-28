@@ -27,6 +27,8 @@ The next flip-flop need only “recognize” that the first flip-flop’s Q outp
 However, the remaining flip-flops should be made ready to toggle only when all lower-order output bits are “high,” thus the need for AND gates.
 
 **Procedure**
+
+
 1.Type the program in Quartus software.
 
 2.Compile and run the program.
@@ -67,6 +69,9 @@ Developed by:  YUGESH M
 ![waveform11(de)](https://github.com/user-attachments/assets/03c8a6eb-f9c2-48e2-b013-2a4efe05cb18)
 
 **TRUTH TABLE**
+
+![TRUTH TABLE](https://github.com/user-attachments/assets/eb67aec3-22cf-4612-a4e7-2760638b7165)
+
 
 **RESULTS**
 Thus the result and output was successfully verified.
