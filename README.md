@@ -43,16 +43,60 @@ However, the remaining flip-flops should be made ready to toggle only when all l
 ```
 /* Program for flipflops and verify its truth table in quartus using Verilog programming.
 
-module synchronuous(out,clk,rst);
-input clk,rst;
-output reg [3:0]out;
-always@(posedge clk)
-begin
-   if(rst)
-     out<=0;
-   else 
-     out <= out+1;
-end
+module syn_counter (
+    input clk,    // Clock signal
+    input rst,    // Reset signal (active high)
+    output [3:0] q // 4-bit output
+);
+
+    wire [3:0] j, k; // J and K inputs for each JK flip-flop
+    wire [3:0] t;    // Toggle signal for each flip-flop
+
+    // Generate the toggle signals for each stage
+    assign j[0] = 1'b1; // First flip-flop toggles on every clock pulse
+    assign k[0] = 1'b1;
+    assign t[0] = q[0]; // Output of the first flip-flop
+
+    assign j[1] = q[0]; // Second flip-flop toggles on q[0] high
+    assign k[1] = q[0];
+    assign t[1] = q[1];
+
+    assign j[2] = q[0] & q[1]; // Third flip-flop toggles on q[1:0] high
+    assign k[2] = q[0] & q[1];
+    assign t[2] = q[2];
+
+    assign j[3] = q[0] & q[1] & q[2]; // Fourth flip-flop toggles on q[2:0] high
+    assign k[3] = q[0] & q[1] & q[2];
+    assign t[3] = q[3];
+
+    // Instantiate 4 JK flip-flops
+    jk_flipflop jk0 (.clk(clk), .rst(rst), .j(j[0]), .k(k[0]), .q(q[0]));
+    jk_flipflop jk1 (.clk(clk), .rst(rst), .j(j[1]), .k(k[1]), .q(q[1]));
+    jk_flipflop jk2 (.clk(clk), .rst(rst), .j(j[2]), .k(k[2]), .q(q[2]));
+    jk_flipflop jk3 (.clk(clk), .rst(rst), .j(j[3]), .k(k[3]), .q(q[3]));
+
+endmodule
+
+// JK flip-flop module
+module jk_flipflop (
+    input clk,    // Clock signal
+    input rst,    // Reset signal (active high)
+    input j,      // J input
+    input k,      // K input
+    output reg q  // Q output
+);
+    always @(posedge clk or posedge rst) begin
+        if (rst) begin
+            q <= 1'b0; // Reset output to 0
+        end else begin
+            case ({j, k})
+                2'b00: q <= q;       // No change
+                2'b01: q <= 1'b0;    // Reset
+                2'b10: q <= 1'b1;    // Set
+                2'b11: q <= ~q;      // Toggle
+            endcase
+        end
+    end
 endmodule
 
 Developed by:  YUGESH M
@@ -62,11 +106,15 @@ Developed by:  YUGESH M
 ```
 
 **RTL LOGIC UP COUNTER**
-![output11(de)](https://github.com/user-attachments/assets/30ad5357-4619-425d-abbf-bfe68280a2d9)
+
+![Screenshot (138)](https://github.com/user-attachments/assets/e7985164-3e62-4497-b0f4-20aa160aea09)
+
 
 
 **TIMING DIAGRAM FOR IP COUNTER**
-![waveform11(de)](https://github.com/user-attachments/assets/03c8a6eb-f9c2-48e2-b013-2a4efe05cb18)
+
+![Screenshot (139)](https://github.com/user-attachments/assets/4de84d0b-1ae0-41f5-ad7a-8e045d7b4292)
+
 
 **TRUTH TABLE**
 
